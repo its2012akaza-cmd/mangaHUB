@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="uz" class="dark">
+<html lang="uz" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MangaHub Uz - Zamonaviy Manga va Anime O'qish Dasturi</title>
-    <link rel="stylesheet" href="style.css">
+    <title>LUXURY HOME - Zamonaviy Uy Jihozlari va Interyer Do'koni</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -13,654 +19,1005 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#fdf4ff',
-                            100: '#fae8ff',
-                            500: '#d946ef',
-                            600: '#c026d3',
-                            700: '#a21caf',
-                            900: '#701a75'
+                            50: '#FAF8F5',
+                            100: '#F5F0EB',
+                            200: '#E6D9CC',
+                            500: '#C5A070', // Warm Gold
+                            600: '#B08956',
+                            900: '#1A1817'  // Deep Charcoal
                         }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-   
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F5F0EB;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1F1D1B;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C5A070;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #B08956;
+        }
+        .toast-enter {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .toast-enter-active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: all 300ms ease-out;
+        }
+        /* Lock background scroll when gatekeeper modal is active */
+        body.auth-locked {
+            overflow: hidden !important;
+            height: 100vh;
+        }
+    </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+<body class="bg-brand-50 dark:bg-brand-900 text-brand-900 dark:text-brand-50 font-sans antialiased flex flex-col min-h-screen transition-colors duration-300 auth-locked">
 
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <!-- Logo -->
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-purple-500/30">
-                    <i class="fa-solid fa-book-open"></i>
-                </div>
-                <div>
-                    <span class="text-xl font-black bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">MangaHub</span>
-                    <span class="text-xs block text-slate-500 dark:text-slate-400 font-medium">O'zbek tilida</span>
-                </div>
-            </div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-            <!-- Search Bar -->
-            <div class="hidden md:flex items-center flex-1 max-w-md mx-8">
-                <div class="relative w-full">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
-                        <i class="fa-solid fa-search"></i>
-                    </span>
-                    <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Manga nomi bo'yicha qidirish..." class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border border-transparent dark:border-slate-700 rounded-xl focus:outline-none focus:border-purple-500 dark:focus:border-purple-500 text-sm transition-all">
-                </div>
-            </div>
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-brand-50/90 dark:bg-brand-900/90 backdrop-blur-md border-b border-brand-200 dark:border-brand-900/50 transition-all duration-200" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-xl bg-brand-500 text-white flex items-center justify-center font-bold text-xl shadow-md group-hover:bg-brand-600 transition">
+                        <i class="fa-solid fa-couch"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold tracking-tight text-brand-900 dark:text-white block leading-tight">LUXURY HOME</span>
+                        <span class="text-xs text-brand-500 font-medium tracking-widest uppercase">Uy va Interyer Jihozlari</span>
+                    </div>
+                </a>
 
-            <!-- Navigation Actions -->
-            <div class="flex items-center space-x-3">
-                <button onclick="navigateTo('home')" id="navHomeBtn" class="px-3 py-2 rounded-xl text-sm font-semibold transition-colors bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300">
-                    <i class="fa-solid fa-house mr-1.5"></i> Bosh sahifa
-                </button>
-                <button onclick="navigateTo('favorites')" id="navFavBtn" class="px-3 py-2 rounded-xl text-sm font-semibold transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 relative">
-                    <i class="fa-solid fa-bookmark mr-1.5"></i> Sevimlilar
-                    <span id="favBadge" class="absolute -top-1 -right-1 bg-purple-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold hidden">0</span>
-                </button>
-                <!-- Dark Mode Toggle -->
-                <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                    <i id="themeIcon" class="fa-solid fa-moon"></i>
-                </button>
+                <!-- Nav Links (Desktop) -->
+                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                    <a href="#hero" class="hover:text-brand-500 transition-colors">Bosh sahifa</a>
+                    <a href="#kategoriyalar" class="hover:text-brand-500 transition-colors">Kategoriyalar</a>
+                    <a href="#katalog" class="hover:text-brand-500 transition-colors">Katalog (30+)</a>
+                    <a href="#reviews" class="hover:text-brand-500 transition-colors">Sharhlar</a>
+                    <a href="#ilhom" class="hover:text-brand-500 transition-colors">3D Dizayn</a>
+                    <a href="#aloqa" class="hover:text-brand-500 transition-colors">Aloqa</a>
+                </nav>
+
+                <!-- Actions (Dark Mode, Wishlist, Cart & Mobile Button) -->
+                <div class="flex items-center gap-3">
+                    <!-- Dark/Light Theme Switcher -->
+                    <button id="theme-toggle" class="p-2.5 rounded-full hover:bg-brand-100 dark:hover:bg-white/10 text-brand-900 dark:text-brand-50 transition" title="Rejimni o'zgartirish">
+                        <i id="theme-icon" class="fa-solid fa-moon text-xl"></i>
+                    </button>
+
+                    <!-- User Profile / Auth Button -->
+                    <div id="user-profile-container" class="relative">
+                        <button id="btn-user-auth" onclick="handleUserAuthClick()" class="flex items-center gap-2 py-2 px-3.5 rounded-full bg-brand-100 dark:bg-white/10 hover:bg-brand-200 dark:hover:bg-white/20 text-brand-900 dark:text-brand-50 text-xs font-semibold transition">
+                            <i class="fa-solid fa-user-circle text-lg text-brand-500"></i>
+                            <span id="user-display-name">Kirish</span>
+                        </button>
+
+                        <!-- User Profile Dropdown Menu -->
+                        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-brand-900 rounded-2xl shadow-xl border border-brand-200 dark:border-white/10 p-4 z-50">
+                            <div class="pb-3 border-b border-brand-100 dark:border-white/10 mb-3">
+                                <h4 id="user-dropdown-name" class="font-bold text-sm"></h4>
+                                <p id="user-dropdown-email" class="text-xs opacity-60 truncate"></p>
+                                <p id="user-dropdown-phone" class="text-xs font-medium text-brand-500 mt-1"></p>
+                            </div>
+                            <button onclick="logoutUser()" class="w-full text-left text-xs py-2 px-3 rounded-xl hover:bg-rose-50 text-rose-500 dark:hover:bg-rose-950/30 transition flex items-center gap-2">
+                                <i class="fa-solid fa-right-from-bracket"></i> Akkountni almashtirish
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Wishlist Button -->
+                    <button id="btn-wishlist-toggle" onclick="toggleWishlistModal()" class="relative p-2.5 rounded-full hover:bg-brand-100 dark:hover:bg-white/10 text-brand-900 dark:text-brand-50 transition" title="Saralanganlar">
+                        <i class="fa-regular fa-heart text-xl"></i>
+                        <span id="wishlist-badge" class="absolute -top-1 -right-1 bg-rose-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center opacity-0 transition-opacity">0</span>
+                    </button>
+
+                    <!-- Cart Button -->
+                    <button id="btn-cart-toggle" onclick="toggleCartDrawer(true)" class="relative p-2.5 rounded-full bg-brand-900 dark:bg-brand-500 text-white hover:bg-brand-500 transition flex items-center gap-2 px-4 shadow-sm" title="Savat">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span class="hidden sm:inline text-sm font-medium">Savat</span>
+                        <span id="cart-badge" class="bg-brand-500 dark:bg-brand-900 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </button>
+
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg hover:bg-brand-100 dark:hover:bg-white/10 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
             </div>
         </div>
-        <!-- Mobile Search Bar -->
-        <div class="md:hidden px-4 pb-3">
-            <div class="relative w-full">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
-                    <i class="fa-solid fa-search"></i>
-                </span>
-                <input type="text" oninput="handleSearch(this.value)" placeholder="Manga qidirish..." class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border border-transparent dark:border-slate-700 rounded-xl focus:outline-none focus:border-purple-500 text-sm">
-            </div>
+
+        <!-- Mobile menu drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-50 dark:bg-brand-900 border-b border-brand-200 dark:border-white/10 px-4 pt-2 pb-4 space-y-2">
+            <a href="#hero" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-brand-100 dark:hover:bg-white/10">Bosh sahifa</a>
+            <a href="#kategoriyalar" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-brand-100 dark:hover:bg-white/10">Kategoriyalar</a>
+            <a href="#katalog" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-brand-100 dark:hover:bg-white/10">Katalog</a>
+            <a href="#reviews" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-brand-100 dark:hover:bg-white/10">Sharhlar</a>
+            <a href="#ilhom" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-brand-100 dark:hover:bg-white/10">3D Dizayn</a>
+            <a href="#aloqa" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-brand-100 dark:hover:bg-white/10">Aloqa</a>
         </div>
     </header>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        
-        <!-- View 1: Home / Catalog View -->
-        <div id="homeView" class="space-y-8">
-            <!-- Hero Banner -->
-            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white p-6 sm:p-10 shadow-2xl">
-                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#c026d3_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                <div class="relative z-10 max-w-2xl">
-                    <span class="px-3 py-1 bg-purple-500/30 border border-purple-400/30 rounded-full text-xs font-semibold tracking-wider uppercase">Eng ommabop</span>
-                    <h1 class="text-3xl sm:text-5xl font-extrabold mt-3 tracking-tight">Sevimli manga va animelaringizni o'zbek tilida o'qing</h1>
-                    <p class="mt-3 text-slate-300 text-sm sm:text-base leading-relaxed">O'lim daftari, Ko'k zindon, Solo Leveling va boshqa yuzlab sara asarlar sizni kutmoqda.</p>
-                    <div class="mt-6 flex flex-wrap gap-3">
-                        <button onclick="openMangaDetail(mangaList[0].id)" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 font-semibold rounded-xl text-sm transition-all shadow-lg shadow-purple-600/30 flex items-center">
-                            <i class="fa-solid fa-play mr-2"></i> Hozir o'qish
-                        </button>
-                        <button onclick="scrollToCatalog()" class="px-6 py-3 bg-white/10 hover:bg-white/20 font-semibold rounded-xl text-sm transition-all border border-white/20">
-                            Katalogni ko'rish
-                        </button>
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section id="hero" class="relative bg-brand-100 dark:bg-brand-900/60 border-b border-brand-200 dark:border-white/10 overflow-hidden py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6 text-center lg:text-left">
+                        <span class="inline-block px-4 py-1.5 bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-500 rounded-full text-xs font-semibold tracking-wider uppercase">
+                            Premium Kolleksiya &amp; 30+ Yangi Jihozlar
+                        </span>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+                            Uyingiz uchun ideal <span class="text-brand-500 italic">shinamlik</span> va zamonaviy uslub
+                        </h1>
+                        <p class="text-lg opacity-70 max-w-xl mx-auto lg:mx-0">
+                            Yumshoq divanlar, shohona krovatlar, nafis lyustra hamda gilamlar to'plami. Uyingizning har bir burchagini mukammal bezating.
+                        </p>
+                        
+                        <!-- Hero Search Bar -->
+                        <div class="pt-2 max-w-md mx-auto lg:mx-0">
+                            <div class="relative flex items-center">
+                                <input type="text" id="hero-search-input" placeholder="Mebel, lyustra, gilam yoki dekor qidirish..." class="w-full pl-5 pr-12 py-3.5 rounded-full border-2 border-brand-200 dark:border-white/10 dark:bg-brand-900/80 focus:border-brand-500 focus:outline-none shadow-sm text-sm">
+                                <button id="hero-search-btn" class="absolute right-2 bg-brand-500 text-white w-9 h-9 rounded-full flex items-center justify-center hover:bg-brand-600 transition">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                            <a href="#katalog" class="px-8 py-3.5 bg-brand-900 dark:bg-brand-500 text-white rounded-full font-medium hover:bg-brand-500 dark:hover:bg-brand-600 transition shadow-lg hover:shadow-xl">
+                                Katalogni ko'rish
+                            </a>
+                            <a href="#ilhom" class="px-8 py-3.5 border-2 border-brand-900 dark:border-brand-500 text-brand-900 dark:text-brand-50 rounded-full font-medium hover:bg-brand-900 dark:hover:bg-brand-500 hover:text-white transition">
+                                3D Interyer Maslahati
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Banner Image Visual -->
+                    <div class="relative">
+                        <div class="relative mx-auto rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] group border border-white/20">
+                            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80" alt="Zamonaviy Interyer" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                            
+                            <!-- Floating Card Badge -->
+                            <div class="absolute bottom-6 left-6 right-6 bg-white/90 dark:bg-brand-900/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-white/20 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-xl bg-brand-500/20 text-brand-500 flex items-center justify-center">
+                                        <i class="fa-solid fa-truck-fast text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-sm">Bepul Yetkazib Berish</h4>
+                                        <p class="text-xs opacity-60">Toshkent va barcha viloyatlarga</p>
+                                    </div>
+                                </div>
+                                <span class="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 text-xs font-bold px-2.5 py-1 rounded-full">Kafolatli</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </section>
 
-          
-            <div class="space-y-3" id="catalogSection">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-xl font-bold flex items-center">
-                        <i class="fa-solid fa-filter text-purple-600 mr-2"></i> Janrlar va Yo'nalishlar
-                    </h2>
-                </div>
-                <div id="genresContainer" class="flex flex-wrap gap-2">
-                   
-                </div>
+        <!-- Room Categories Highlight -->
+        <section id="kategoriyalar" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold mb-3">Mahsulot Kategoriyalari</h2>
+                <p class="opacity-70">Uyingizning har bir xonasi va uslubi uchun maxsus saralangan to'plamlar</p>
             </div>
 
-            <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                    <h2 id="catalogTitle" class="text-xl font-bold flex items-center">
-                        <i class="fa-solid fa-fire text-purple-600 mr-2"></i> Barcha Asarlar
-                    </h2>
-                    <span id="mangaCount" class="text-xs font-semibold text-slate-500 bg-slate-200 dark:bg-slate-800 px-2.5 py-1 rounded-lg">0 ta manga</span>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
+                <div class="category-card cursor-pointer group relative rounded-2xl overflow-hidden shadow-md aspect-[3/4]" data-category="mehmonxona">
+                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80" alt="Mehmonxona" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-900/90 via-brand-900/30 to-transparent flex items-end p-3">
+                        <div class="text-white">
+                            <h3 class="text-sm font-bold">Mehmonxona</h3>
+                            <p class="text-[10px] text-white/80">Divan, Stollar</p>
+                        </div>
+                    </div>
                 </div>
-                <div id="mangaGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-                    
+
+                <div class="category-card cursor-pointer group relative rounded-2xl overflow-hidden shadow-md aspect-[3/4]" data-category="yotoqxona">
+                    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80" alt="Yotoqxona" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-900/90 via-brand-900/30 to-transparent flex items-end p-3">
+                        <div class="text-white">
+                            <h3 class="text-sm font-bold">Yotoqxona</h3>
+                            <p class="text-[10px] text-white/80">Krovat, Tumba</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card cursor-pointer group relative rounded-2xl overflow-hidden shadow-md aspect-[3/4]" data-category="oshxona">
+                    <img src="https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=400&q=80" alt="Oshxona" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-900/90 via-brand-900/30 to-transparent flex items-end p-3">
+                        <div class="text-white">
+                            <h3 class="text-sm font-bold">Oshxona</h3>
+                            <p class="text-[10px] text-white/80">Stul &amp; Stollar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card cursor-pointer group relative rounded-2xl overflow-hidden shadow-md aspect-[3/4]" data-category="yoritgichlar">
+                    <img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=400&q=80" alt="Yoritgichlar" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-900/90 via-brand-900/30 to-transparent flex items-end p-3">
+                        <div class="text-white">
+                            <h3 class="text-sm font-bold">Yoritgichlar</h3>
+                            <p class="text-[10px] text-white/80">Lyustra, Torsher</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card cursor-pointer group relative rounded-2xl overflow-hidden shadow-md aspect-[3/4]" data-category="gilamlar">
+                    <img src="https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=400&q=80" alt="Gilamlar" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-900/90 via-brand-900/30 to-transparent flex items-end p-3">
+                        <div class="text-white">
+                            <h3 class="text-sm font-bold">Gilamlar</h3>
+                            <p class="text-[10px] text-white/80">Soft Gilamlar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card cursor-pointer group relative rounded-2xl overflow-hidden shadow-md aspect-[3/4]" data-category="dekor">
+                    <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=400&q=80" alt="Dekoratsiya" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-900/90 via-brand-900/30 to-transparent flex items-end p-3">
+                        <div class="text-white">
+                            <h3 class="text-sm font-bold">Tekstil &amp; Dekor</h3>
+                            <p class="text-[10px] text-white/80">Vazalar, Yostiqlar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card cursor-pointer group relative rounded-2xl overflow-hidden shadow-md aspect-[3/4]" data-category="ishxona">
+                    <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=400&q=80" alt="Ishxona" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-900/90 via-brand-900/30 to-transparent flex items-end p-3">
+                        <div class="text-white">
+                            <h3 class="text-sm font-bold">Ishxona</h3>
+                            <p class="text-[10px] text-white/80">Kreslo &amp; Stol</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="detailView" class="hidden space-y-8">
-            <button onclick="navigateTo('home')" class="px-4 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 rounded-xl text-sm font-semibold transition-colors flex items-center w-max">
-                <i class="fa-solid fa-arrow-left mr-2"></i> Orqaga qaytish
-            </button>
-            
-            <div id="mangaDetailContent" class="grid grid-cols-1 md:grid-cols-3 gap-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm">
-              
-            </div>
-        </div>
-
-      
-        <div id="readerView" class="hidden space-y-4">
-            <div class="sticky top-16 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-md">
-                <div class="flex items-center space-x-3">
-                    <button onclick="closeReader()" class="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-sm font-semibold transition-colors flex items-center">
-                        <i class="fa-solid fa-xmark mr-2"></i> Chiqish
-                    </button>
+        <!-- Product Catalog Section -->
+        <section id="katalog" class="py-16 bg-white dark:bg-brand-900/40 border-y border-brand-200 dark:border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
                     <div>
-                        <h3 id="readerMangaTitle" class="font-bold text-sm sm:text-base line-clamp-1">Manga Nomi</h3>
-                        <p id="readerChapterTitle" class="text-xs text-slate-500 dark:text-slate-400">1-qism</p>
+                        <span class="text-brand-500 font-bold text-xs uppercase tracking-widest">Kengaytirilgan To'plam</span>
+                        <h2 class="text-3xl font-bold mt-1">Mahsulotlar Katalogi (<span id="total-count-badge">32</span>)</h2>
+                        <p class="opacity-60 mt-1">Siz uchun saralangan 30 dan ortiq eng so'nggi zamonaviy mebellar</p>
+                    </div>
+
+                    <!-- Filter Tabs -->
+                    <div class="flex flex-wrap gap-2" id="filter-tabs">
+                        <button data-filter="all" class="filter-btn active px-4 py-2 rounded-full text-xs font-semibold bg-brand-900 dark:bg-brand-500 text-white transition">
+                            Barchasi
+                        </button>
+                        <button data-filter="mehmonxona" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 dark:bg-white/10 text-brand-900 dark:text-white hover:bg-brand-200 transition">
+                            Mehmonxona
+                        </button>
+                        <button data-filter="yotoqxona" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 dark:bg-white/10 text-brand-900 dark:text-white hover:bg-brand-200 transition">
+                            Yotoqxona
+                        </button>
+                        <button data-filter="oshxona" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 dark:bg-white/10 text-brand-900 dark:text-white hover:bg-brand-200 transition">
+                            Oshxona
+                        </button>
+                        <button data-filter="yoritgichlar" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 dark:bg-white/10 text-brand-900 dark:text-white hover:bg-brand-200 transition">
+                            Yoritgichlar
+                        </button>
+                        <button data-filter="gilamlar" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 dark:bg-white/10 text-brand-900 dark:text-white hover:bg-brand-200 transition">
+                            Gilamlar
+                        </button>
+                        <button data-filter="dekor" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 dark:bg-white/10 text-brand-900 dark:text-white hover:bg-brand-200 transition">
+                            Tekstil &amp; Dekor
+                        </button>
+                        <button data-filter="ishxona" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-brand-100 dark:bg-white/10 text-brand-900 dark:text-white hover:bg-brand-200 transition">
+                            Ishxona
+                        </button>
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-2">
-                    <button onclick="prevChapter()" id="prevChapterBtn" class="px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50">
-                        <i class="fa-solid fa-chevron-left mr-1"></i> Oldingi
-                    </button>
-                    <select id="chapterSelect" onchange="changeChapter(this.value)" class="px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-transparent dark:border-slate-700 rounded-xl text-sm font-semibold focus:outline-none">
-                        <!-- Chapter options -->
-                    </select>
-                    <button onclick="nextChapter()" id="nextChapterBtn" class="px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50">
-                        Keyingi <i class="fa-solid fa-chevron-right ml-1"></i>
+                <!-- Price and Sort Controls -->
+                <div class="flex flex-col sm:flex-row items-center justify-between p-4 bg-brand-50 dark:bg-brand-900/80 rounded-2xl mb-8 gap-4 border border-brand-200 dark:border-white/10">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <span class="text-sm font-semibold whitespace-nowrap">Maksimal Narx:</span>
+                        <input type="range" id="price-range" min="200000" max="25000000" step="500000" value="25000000" class="w-full sm:w-48 accent-brand-500">
+                        <span id="price-range-val" class="text-sm font-bold text-brand-500 whitespace-nowrap">25,000,000 so'm</span>
+                    </div>
+
+                    <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                        <span class="text-sm font-medium">Saralash:</span>
+                        <select id="sort-select" class="bg-white dark:bg-brand-900 border border-brand-200 dark:border-white/20 rounded-lg text-sm p-2 focus:outline-none">
+                            <option value="default">Ommabopligi bo'yicha</option>
+                            <option value="price-low">Arzonroq</option>
+                            <option value="price-high">Qimmatroq</option>
+                            <option value="rating">Reytingi bo'yicha</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Product Grid -->
+                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Dynamic Product Cards Injected via JS -->
+                </div>
+
+                <!-- Load More Button -->
+                <div class="text-center mt-12" id="load-more-container">
+                    <button id="btn-load-more" class="px-8 py-3.5 bg-brand-100 dark:bg-white/10 text-brand-900 dark:text-white font-bold rounded-full hover:bg-brand-500 hover:text-white transition shadow-sm">
+                        Yana Ko'proq Mahsulotlarni Yuklash
                     </button>
                 </div>
+
+                <!-- Empty State -->
+                <div id="no-products" class="hidden text-center py-16">
+                    <i class="fa-solid fa-couch text-5xl opacity-30 mb-3"></i>
+                    <h3 class="text-lg font-bold">Hech qanday mahsulot topilmadi</h3>
+                    <p class="text-sm opacity-60">Qidiruv yoki narx filtrini o'zgartirib ko'ring.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Customer Reviews Section -->
+        <section id="reviews" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-brand-500 font-semibold text-xs uppercase tracking-widest">Mijozlarimiz Fikri</span>
+                <h2 class="text-3xl font-bold mt-2">Mijozlarimizdan Kelgan Sharhlar</h2>
+                <p class="opacity-70 text-sm mt-1">Xaridorlarimizning mamnuniyat baholari va bildirilgan haqiqiy fikrlar</p>
             </div>
 
-            <!-- Manga Pages Container -->
-            <div id="readerPages" class="max-w-3xl mx-auto flex flex-col items-center space-y-4 py-4">
-               
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 bg-white dark:bg-brand-900/50 rounded-2xl border border-brand-200 dark:border-white/10 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex gap-1 text-amber-500 mb-3">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm opacity-80 italic mb-4">"Scandi Soft Divan va oltin rangli yoritgich sotib oldim. Toshkent bo'yicha 1 kunda yetkazib kelishdi hamda o'rnatib berishdi. Sifatiga gap yo'q!"</p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-brand-100 dark:border-white/10">
+                        <div class="w-10 h-10 rounded-full bg-brand-500 text-white font-bold flex items-center justify-center">J</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Jasur Rahimov</h4>
+                            <p class="text-xs opacity-50">Toshkent shahar</p>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Bottom Chapter Navigation -->
-            <div class="flex justify-center pb-8">
-                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-purple-600/30 transition-all flex items-center">
-                    <i class="fa-solid fa-arrow-up mr-2"></i> Tepaga qaytish
-                </button>
-            </div>
-        </div>
+                <div class="p-6 bg-white dark:bg-brand-900/50 rounded-2xl border border-brand-200 dark:border-white/10 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex gap-1 text-amber-500 mb-3">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm opacity-80 italic mb-4">"Nafis ipak gilam va yotoqxona tumbasi kutilganidan ham chiroyli chiqdi. Saytda 3D ko'rinish va Dark Mode funksiyasi mavjudligi juda qulay edi."</p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-brand-100 dark:border-white/10">
+                        <div class="w-10 h-10 rounded-full bg-brand-600 text-white font-bold flex items-center justify-center">M</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Malika Umarova</h4>
+                            <p class="text-xs opacity-50">Samarqand shahar</p>
+                        </div>
+                    </div>
+                </div>
 
-        <div id="favoritesView" class="hidden space-y-6">
-            <div class="flex items-center justify-between">
-                <h2 class="text-2xl font-extrabold flex items-center">
-                    <i class="fa-solid fa-bookmark text-purple-600 mr-3"></i> Sevimli Asarlar
-                </h2>
-                <span id="favCountBadge" class="text-xs font-semibold text-slate-500 bg-slate-200 dark:bg-slate-800 px-3 py-1.5 rounded-xl">0 ta manga</span>
+                <div class="p-6 bg-white dark:bg-brand-900/50 rounded-2xl border border-brand-200 dark:border-white/10 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex gap-1 text-amber-500 mb-3">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <p class="text-sm opacity-80 italic mb-4">"Offisimiz uchun ergonomik kreslo va ish stoli zakaz qilgandik. Promokod ishlatib 10% chegirma ham oldik. Sifatli va hamyonbop."</p>
+                    </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-brand-100 dark:border-white/10">
+                        <div class="w-10 h-10 rounded-full bg-brand-900 dark:bg-brand-500 text-white font-bold flex items-center justify-center">B</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Bekzod Karimov</h4>
+                            <p class="text-xs opacity-50">Buxoro shahar</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="favoritesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-                <!-- Favorites injected via JS -->
-            </div>
-        </div>
+        </section>
 
+        <!-- Interior Inspiration / Visualizer Section -->
+        <section id="ilhom" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-brand-900 text-white rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-xl">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
+                    <div>
+                        <span class="text-brand-500 font-semibold text-xs uppercase tracking-widest">Dizayn Maslahati</span>
+                        <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-4">Uyingiz uchun 3D Dizayn va Uslub Tanlovi</h2>
+                        <p class="text-white/70 mb-6">
+                            Qaysi mebel sizning xonangizga mos kelishi haqida ikkilanayapsizmi? Bizning interyer dizaynerlarimiz bepul konsultatsiya va 3D modellash xizmatini taklif etishadi.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#aloqa" class="px-6 py-3 bg-brand-500 hover:bg-brand-600 font-medium rounded-full transition">
+                                Bepul Maslahat Olish
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=500&q=80" alt="Dizayn 1" class="rounded-2xl shadow-md w-full h-44 object-cover">
+                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=500&q=80" alt="Dizayn 2" class="rounded-2xl shadow-md w-full h-44 object-cover mt-4">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features / Advantages Section -->
+        <section class="py-12 bg-brand-100/50 border-t border-brand-200 dark:border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="p-6 bg-white dark:bg-brand-900/80 rounded-2xl shadow-sm border border-brand-200 dark:border-white/10">
+                        <div class="w-14 h-14 bg-brand-500/10 text-brand-600 dark:text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Sifat Kafolati</h3>
+                        <p class="text-sm opacity-70">Barcha mebellarimiz uchun 3 yilgacha rasmiy kafolat taqdim etiladi.</p>
+                    </div>
+
+                    <div class="p-6 bg-white dark:bg-brand-900/80 rounded-2xl shadow-sm border border-brand-200 dark:border-white/10">
+                        <div class="w-14 h-14 bg-brand-500/10 text-brand-600 dark:text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-truck-ramp-box"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Tashish va O'rnatish</h3>
+                        <p class="text-sm opacity-70">Toshkent bo'yicha etkazib berish va professional o'rnatib berish bepul.</p>
+                    </div>
+
+                    <div class="p-6 bg-white dark:bg-brand-900/80 rounded-2xl shadow-sm border border-brand-200 dark:border-white/10">
+                        <div class="w-14 h-14 bg-brand-500/10 text-brand-600 dark:text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">24/7 Qo'llab-quvvatlash</h3>
+                        <p class="text-sm opacity-70">Savollaringiz bormi? Mutaxassislarimiz har qanday vaqtda yordamga tayyor.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact & Order Form Section -->
+        <section id="aloqa" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-3xl font-bold mb-4">Biz Bilan Bog'laning</h2>
+                    <p class="opacity-70 mb-8">
+                        Savollaringiz bor yoki mebellarni o'zingizga mos o'lchamda buyurtma qilmoqchimisiz? Formani to'ldiring.
+                    </p>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-brand-200 dark:bg-white/10 flex items-center justify-center">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold">Manzil</h4>
+                                <p class="text-sm opacity-70">Toshkent sh., Amir Temur shox ko'chasi, 107-uy</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-brand-200 dark:bg-white/10 flex items-center justify-center">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold">Telefon</h4>
+                                <p class="text-sm opacity-70">+998 (71) 200-00-00 / +998 (90) 123-45-67</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-brand-200 dark:bg-white/10 flex items-center justify-center">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold">Email</h4>
+                                <p class="text-sm opacity-70">info@luxuryhome.uz</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-brand-900/80 p-8 rounded-3xl shadow-lg border border-brand-200 dark:border-white/10">
+                    <form id="contact-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Ismingiz</label>
+                            <input type="text" required placeholder="Ali Valiyev" class="w-full px-4 py-3 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 focus:outline-none focus:border-brand-500 text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Telefon Raqamingiz</label>
+                            <input type="tel" required placeholder="+998 90 123 45 67" class="w-full px-4 py-3 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 focus:outline-none focus:border-brand-500 text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Xabar yoki Buyurtma Izohi</label>
+                            <textarea rows="4" required placeholder="Qanday mebel qiziqtirmoqda?" class="w-full px-4 py-3 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 focus:outline-none focus:border-brand-500 text-sm"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-3.5 bg-brand-900 dark:bg-brand-500 text-white font-medium rounded-xl hover:bg-brand-500 dark:hover:bg-brand-600 transition shadow-md">
+                            Xabarni Yuborish
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-12 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">
-                    <i class="fa-solid fa-book-open"></i>
+    <!-- Footer -->
+    <footer class="bg-brand-900 text-white pt-12 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-white/10">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-couch"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight">LUXURY HOME</span>
+                    </div>
+                    <p class="text-sm text-white/60">
+                        Uyingiz uchun sifatli va nafis mebellar to'plami. Biz bilan uyingiz shinamroq bo'ladi.
+                    </p>
                 </div>
-                <span class="font-bold text-base bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">MangaHub Uz</span>
+
+                <div>
+                    <h4 class="font-bold text-sm uppercase tracking-wider mb-4 text-brand-500">Bo'limlar</h4>
+                    <ul class="space-y-2 text-sm text-white/70">
+                        <li><a href="#hero" class="hover:text-white transition">Bosh sahifa</a></li>
+                        <li><a href="#katalog" class="hover:text-white transition">Katalog</a></li>
+                        <li><a href="#kategoriyalar" class="hover:text-white transition">Kategoriyalar</a></li>
+                        <li><a href="#ilhom" class="hover:text-white transition">Interyer Ilhom</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-sm uppercase tracking-wider mb-4 text-brand-500">Kategoriyalar</h4>
+                    <ul class="space-y-2 text-sm text-white/70">
+                        <li><a href="#katalog" class="hover:text-white transition">Mehmonxona Mebellari</a></li>
+                        <li><a href="#katalog" class="hover:text-white transition">Yotoqxona Jihozlari</a></li>
+                        <li><a href="#katalog" class="hover:text-white transition">Oshxona Stullari va Stollar</a></li>
+                        <li><a href="#katalog" class="hover:text-white transition">Office va Ish stollari</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-sm uppercase tracking-wider mb-4 text-brand-500">Ijtimoiy Tarmoqlar</h4>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-500 transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-500 transition"><i class="fa-brands fa-telegram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-brand-500 transition"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                </div>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 text-center">Barcha huquqlar himoyalangan © 2026. O'zbek tilidagi eng sara mangalar makoni.</p>
-            <div class="flex space-x-4 text-slate-500 dark:text-slate-400">
-                <a href="#" class="hover:text-purple-600 transition-colors"><i class="fa-brands fa-telegram text-lg"></i></a>
-                <a href="#" class="hover:text-purple-600 transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
-                <a href="#" class="hover:text-purple-600 transition-colors"><i class="fa-brands fa-discord text-lg"></i></a>
+
+            <div class="pt-6 text-center text-xs text-white/50">
+                &copy; 2026 LUXURY HOME. Barcha huquqlar himoyalangan.
             </div>
         </div>
     </footer>
 
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 text-sm font-semibold">
-        <i id="toastIcon" class="fa-solid fa-circle-check text-purple-400"></i>
-        <span id="toastMessage">Xabar matni</span>
-    </div>
-
-    <script>
-        // Manga Database including Death Note and Blue Lock
-        const mangaList = [
-            {
-                id: 1,
-                title: "Solo Leveling (Yolg'iz o'sish)",
-                japaneseTitle: "Ore dake Level Up na Ken",
-                cover: "https://placehold.co/400x600/7c3aed/ffffff?text=Solo+Leveling",
-                banner: "https://placehold.co/800x400/6d28d9/ffffff?text=Solo+Leveling+Banner",
-                rating: 4.9,
-                views: "1.2M",
-                status: "Tugallangan",
-                genres: ["Aksiya", "Fentezi", "Sarguzasht"],
-                author: "Chugong",
-                artist: "Dubu (Redice Studio)",
-                description: "Dunoni dahshatli zindonlar va yirtqich hayvonlardan qutqarish uchun 'Ovchilar' paydo bo'ldi. Sung Jin-woo eng zaif ovchilardan biri edi, biroq sirli tizim orqali u faqat o'zi o'sa oladigan noyob qobiliyatga ega bo'ldi.",
-                chapters: [
-                    { id: 101, title: "1-qism: Ikki tomonlama zindon", pages: ["https://placehold.co/600x900/1e293b/ffffff?text=Solo+Leveling+Ch+1+-+1", "https://placehold.co/600x900/334155/ffffff?text=Solo+Leveling+Ch+1+-+2", "https://placehold.co/600x900/475569/ffffff?text=Solo+Leveling+Ch+1+-+3"] },
-                    { id: 102, title: "2-qism: Qayta tug'ilish", pages: ["https://placehold.co/600x900/1e293b/ffffff?text=Solo+Leveling+Ch+2+-+1", "https://placehold.co/600x900/334155/ffffff?text=Solo+Leveling+Ch+2+-+2"] },
-                    { id: 103, title: "3-qism: Kundalik vazifa", pages: ["https://placehold.co/600x900/1e293b/ffffff?text=Solo+Leveling+Ch+3+-+1", "https://placehold.co/600x900/334155/ffffff?text=Solo+Leveling+Ch+3+-+2"] }
-                ]
-            },
-            {
-                id: 2,
-                title: "O'lim daftari (Death Note)",
-                japaneseTitle: "Desu Nōto",
-                cover: "https://placehold.co/400x600/0f172a/ffffff?text=Death+Note",
-                banner: "https://placehold.co/800x400/1e293b/ffffff?text=Death+Note+Banner",
-                rating: 5.0,
-                views: "4.2M",
-                status: "Tugallangan",
-                genres: ["Sirli", "Psixologik", "Triller"],
-                author: "Tsugumi Ohba",
-                artist: "Takeshi Obata",
-                description: "Yagami Light ismli o'quvchi yerga tushib qolgan shindori (o'lim xudosi) Ryukning daftarini topib oladi. Kimningdir ismi shu daftarga yozilsa, u halok bo'ladi. Light bu daftardan foydalanib dunyodagi jinoyatchilardan tozalamoqchi bo'ladi va dahshatli aql o'yini boshlanadi.",
-                chapters: [
-                    { id: 201, title: "1-qism: Isyon", pages: ["https://placehold.co/600x900/0f172a/ffffff?text=Death+Note+Ch+1+-+1", "https://placehold.co/600x900/1e293b/ffffff?text=Death+Note+Ch+1+-+2"] },
-                    { id: 202, title: "2-qism: Yolg'izlanish", pages: ["https://placehold.co/600x900/0f172a/ffffff?text=Death+Note+Ch+2+-+1", "https://placehold.co/600x900/1e293b/ffffff?text=Death+Note+Ch+2+-+2"] }
-                ]
-            },
-            {
-                id: 3,
-                title: "Ko'k zindon (Blue Lock)",
-                japaneseTitle: "Burū Rokku",
-                cover: "https://placehold.co/400x600/2563eb/ffffff?text=Blue+Lock",
-                banner: "https://placehold.co/800x400/1d4ed8/ffffff?text=Blue+Lock+Banner",
-                rating: 4.8,
-                views: "2.9M",
-                status: "Davom etmoqda",
-                genres: ["Sport", "Aksiya", "Drama"],
-                author: "Muneyuki Kaneshiro",
-                artist: "Yusuke Nomura",
-                description: "Yaponiya JChdagi omadsizlikdan keyin mamlakatning eng yaxshi va o'ta xudbin hujumchisini tarbiyalash uchun 'Ko'k zindon' deb nomlangan sirli qamoqxona-loyihasini boshlaydi. 300 ta yosh futbolchi o'rtasidagi shafqatsiz raqobat boshlanadi.",
-                chapters: [
-                    { id: 301, title: "1-qism: Orzu", pages: ["https://placehold.co/600x900/1e3a8a/ffffff?text=Blue+Lock+Ch+1+-+1", "https://placehold.co/600x900/1d4ed8/ffffff?text=Blue+Lock+Ch+1+-+2"] },
-                    { id: 302, title: "2-qism: Xudbinlik", pages: ["https://placehold.co/600x900/1e3a8a/ffffff?text=Blue+Lock+Ch+2+-+1", "https://placehold.co/600x900/1d4ed8/ffffff?text=Blue+Lock+Ch+2+-+2"] }
-                ]
-            },
-            {
-                id: 4,
-                title: "Naruto",
-                japaneseTitle: "Naruto",
-                cover: "https://placehold.co/400x600/f97316/ffffff?text=Naruto",
-                banner: "https://placehold.co/800x400/ea580c/ffffff?text=Naruto+Banner",
-                rating: 4.8,
-                views: "3.5M",
-                status: "Tugallangan",
-                genres: ["Aksiya", "Shonen", "Sarguzasht"],
-                author: "Masashi Kishimoto",
-                artist: "Masashi Kishimoto",
-                description: "Ichida to'qquz dumli maxluq muhrlangan yetim bola Naruto Uzumaki qishlog'ida tan olinish va eng buyuk nindzyap - Hokage bo'lishni orzu qiladi.",
-                chapters: [
-                    { id: 401, title: "1-qism: Uzumaki Naruto!", pages: ["https://placehold.co/600x900/431407/ffffff?text=Naruto+Ch+1+-+1", "https://placehold.co/600x900/7c2d12/ffffff?text=Naruto+Ch+1+-+2"] }
-                ]
-            },
-            {
-                id: 5,
-                title: "Jujutsu Kaisen (Sehrli jang)",
-                japaneseTitle: "Jujutsu Kaisen",
-                cover: "https://placehold.co/400x600/0ea5e9/ffffff?text=Jujutsu+Kaisen",
-                banner: "https://placehold.co/800x400/0284c7/ffffff?text=Jujutsu+Kaisen+Banner",
-                rating: 4.9,
-                views: "2.1M",
-                status: "Davom etmoqda",
-                genres: ["Aksiya", "Fentezi", "Sirli"],
-                author: "Gege Akutami",
-                artist: "Gege Akutami",
-                description: "O'rta maktab o'quvchisi Yuji Itadori la'natlangan kuchli talisman - Sukunaning barmog'ini yutib yuboradi va sirli sehrgarlar jamiyatiga qo'shilishga majbur bo'ladi.",
-                chapters: [
-                    { id: 501, title: "1-qism: Ryomen Sukuna", pages: ["https://placehold.co/600x900/082f49/ffffff?text=JJK+Ch+1+-+1", "https://placehold.co/600x900/0369a1/ffffff?text=JJK+Ch+1+-+2"] }
-                ]
-            }
-        ];
-
-        let currentView = 'home';
-        let selectedGenre = 'Barchasi';
-        let searchQuery = '';
-        let favorites = JSON.parse(localStorage.getItem('manga_favorites')) || [];
-        let currentMangaId = null;
-        let currentChapterId = null;
-
-        window.onload = function() {
-            updateFavoritesBadge();
-            renderGenres();
-            renderMangaGrid();
-            
-            if (localStorage.getItem('theme') === 'light') {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('themeIcon').className = 'fa-solid fa-sun';
-            }
-        };
-
-        function navigateTo(viewName) {
-            currentView = viewName;
-            document.getElementById('homeView').classList.add('hidden');
-            document.getElementById('detailView').classList.add('hidden');
-            document.getElementById('readerView').classList.add('hidden');
-            document.getElementById('favoritesView').classList.add('hidden');
-
-            document.getElementById('navHomeBtn').className = "px-3 py-2 rounded-xl text-sm font-semibold transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300";
-            document.getElementById('navFavBtn').className = "px-3 py-2 rounded-xl text-sm font-semibold transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 relative";
-
-            if (viewName === 'home') {
-                document.getElementById('homeView').classList.remove('hidden');
-                document.getElementById('navHomeBtn').className = "px-3 py-2 rounded-xl text-sm font-semibold transition-colors bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300";
-                renderMangaGrid();
-            } else if (viewName === 'favorites') {
-                document.getElementById('favoritesView').classList.remove('hidden');
-                document.getElementById('navFavBtn').className = "px-3 py-2 rounded-xl text-sm font-semibold transition-colors bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300 relative";
-                renderFavorites();
-            }
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        function renderGenres() {
-            const allGenres = ['Barchasi', ...new Set(mangaList.flatMap(m => m.genres))];
-            const container = document.getElementById('genresContainer');
-            container.innerHTML = '';
-
-            allGenres.forEach(genre => {
-                const btn = document.createElement('button');
-                const isActive = selectedGenre === genre;
-                btn.className = `px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                    isActive 
-                        ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30' 
-                        : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-purple-500'
-                }`;
-                btn.innerText = genre;
-                btn.onclick = () => {
-                    selectedGenre = genre;
-                    renderGenres();
-                    renderMangaGrid();
-                };
-                container.appendChild(btn);
-            });
-        }
-
-        function handleSearch(query) {
-            searchQuery = query.toLowerCase().trim();
-            if (currentView !== 'home') navigateTo('home');
-            renderMangaGrid();
-        }
-
-        function renderMangaGrid() {
-            const grid = document.getElementById('mangaGrid');
-            const catalogTitle = document.getElementById('catalogTitle');
-            const mangaCount = document.getElementById('mangaCount');
-
-            let filtered = mangaList.filter(manga => {
-                const matchesGenre = selectedGenre === 'Barchasi' || manga.genres.includes(selectedGenre);
-                const matchesSearch = manga.title.toLowerCase().includes(searchQuery) || manga.japaneseTitle.toLowerCase().includes(searchQuery);
-                return matchesGenre && matchesSearch;
-            });
-
-            mangaCount.innerText = `${filtered.length} ta asar`;
-            catalogTitle.innerHTML = `<i class="fa-solid fa-fire text-purple-600 mr-2"></i> ${selectedGenre === 'Barchasi' ? 'Barcha Asarlar' : selectedGenre + ' Asarlari'}`;
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full py-16 text-center space-y-3">
-                        <div class="w-16 h-16 mx-auto rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-400 text-2xl">
-                            <i class="fa-solid fa-face-confused"></i>
-                        </div>
-                        <h3 class="font-bold text-lg">Hech qanday asar topilmadi</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Qidiruv so'zini yoki janrni o'zgartirib ko'ring.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            grid.innerHTML = '';
-            filtered.forEach(manga => {
-                const isFav = favorites.includes(manga.id);
-                const card = document.createElement('div');
-                card.className = "group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer";
-                card.onclick = () => openMangaDetail(manga.id);
-
-                card.innerHTML = `
-                    <div class="relative aspect-[3/4] overflow-hidden bg-slate-200 dark:bg-slate-800">
-                        <img src="${manga.cover}" alt="${manga.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x600/7c3aed/ffffff?text=Manga'">
-                        <div class="absolute top-2 right-2 z-10">
-                            <button onclick="event.stopPropagation(); toggleFavorite(${manga.id})" class="w-9 h-9 rounded-xl bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-purple-600 transition-colors">
-                                <i class="${isFav ? 'fa-solid text-purple-400' : 'fa-regular'} fa-bookmark"></i>
-                            </button>
-                        </div>
-                        <div class="absolute bottom-2 left-2 flex items-center space-x-1.5 px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-lg text-white text-xs font-semibold">
-                            <i class="fa-solid fa-star text-amber-400"></i>
-                            <span>${manga.rating}</span>
-                        </div>
-                    </div>
-                    <div class="p-4 flex flex-col flex-1 justify-between space-y-2">
-                        <div>
-                            <span class="text-[10px] uppercase font-bold text-purple-600 dark:text-purple-400 tracking-wider">${manga.genres[0]}</span>
-                            <h3 class="font-bold text-sm line-clamp-1 group-hover:text-purple-600 transition-colors">${manga.title}</h3>
-                        </div>
-                        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                            <span><i class="fa-solid fa-book mr-1"></i> ${manga.chapters.length} qism</span>
-                            <span>${manga.status}</span>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function openMangaDetail(mangaId) {
-            currentMangaId = mangaId;
-            const manga = mangaList.find(m => m.id === mangaId);
-            if (!manga) return;
-
-            const isFav = favorites.includes(manga.id);
-            const detailContent = document.getElementById('mangaDetailContent');
-
-            detailContent.innerHTML = `
-                <div class="space-y-4">
-                    <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800">
-                        <img src="${manga.cover}" alt="${manga.title}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x600/7c3aed/ffffff?text=Manga'">
-                    </div>
-                    <button onclick="toggleFavorite(${manga.id})" class="w-full py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center space-x-2 ${
-                        isFav 
-                            ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300 border border-purple-300 dark:border-purple-700' 
-                            : 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-600/30'
-                    }">
-                        <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
-                        <span>${isFav ? 'Sevimlilardan o\'chirish' : 'Sevimlilarga qo\'shish'}</span>
+    <!-- Shopping Cart Drawer Overlay -->
+    <div id="cart-drawer-overlay" class="fixed inset-0 bg-black/50 z-50 opacity-0 pointer-events-none transition-opacity duration-300" onclick="toggleCartDrawer(false)">
+        <div id="cart-drawer" onclick="event.stopPropagation()" class="fixed right-0 top-0 h-full w-full max-w-md bg-white dark:bg-brand-900 shadow-2xl p-6 flex flex-col justify-between transform translate-x-full transition-transform duration-300">
+            <div>
+                <div class="flex items-center justify-between pb-4 border-b border-brand-200 dark:border-white/10">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-bag-shopping text-brand-500"></i> Savatchangiz
+                    </h3>
+                    <button onclick="toggleCartDrawer(false)" class="hover:text-rose-500 p-2 text-xl">
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
-                <div class="md:col-span-2 space-y-6">
-                    <div>
-                        <div class="flex flex-wrap gap-2 mb-2">
-                            ${manga.genres.map(g => `<span class="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 text-xs font-semibold rounded-lg">${g}</span>`).join('')}
-                        </div>
-                        <h1 class="text-2xl sm:text-3xl font-extrabold">${manga.title}</h1>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 italic">${manga.japaneseTitle}</p>
-                    </div>
-
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs">
-                        <div>
-                            <span class="block text-slate-500 dark:text-slate-400 font-medium">Reyting</span>
-                            <span class="font-bold text-sm flex items-center mt-0.5"><i class="fa-solid fa-star text-amber-400 mr-1"></i> ${manga.rating}</span>
-                        </div>
-                        <div>
-                            <span class="block text-slate-500 dark:text-slate-400 font-medium">Ko'rishlar</span>
-                            <span class="font-bold text-sm mt-0.5 block">${manga.views}</span>
-                        </div>
-                        <div>
-                            <span class="block text-slate-500 dark:text-slate-400 font-medium">Holati</span>
-                            <span class="font-bold text-sm text-purple-600 mt-0.5 block">${manga.status}</span>
-                        </div>
-                        <div>
-                            <span class="block text-slate-500 dark:text-slate-400 font-medium">Muallif</span>
-                            <span class="font-bold text-sm mt-0.5 block line-clamp-1">${manga.author}</span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
-                        <h3 class="font-bold text-sm sm:text-base">Tavsif</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${manga.description}</p>
-                    </div>
-
-                    <div class="space-y-3">
-                        <h3 class="font-bold text-sm sm:text-base flex items-center justify-between">
-                            <span>Qismlar ro'yxati</span>
-                            <span class="text-xs font-normal text-slate-500">${manga.chapters.length} ta qism</span>
-                        </h3>
-                        <div class="max-h-60 overflow-y-auto space-y-2 pr-1 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 bg-slate-50 dark:bg-slate-800/30">
-                            ${manga.chapters.map(ch => `
-                                <div onclick="openReader(${manga.id}, ${ch.id})" class="flex items-center justify-between p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl hover:border-purple-500 cursor-pointer transition-all group">
-                                    <span class="font-semibold text-sm group-hover:text-purple-600 transition-colors">${ch.title}</span>
-                                    <span class="text-xs text-slate-500 group-hover:text-purple-600 flex items-center">O'qish <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i></span>
-                                </div>
-                            `).join('')}
-                        </div>
+                <!-- Free Shipping Bar -->
+                <div class="my-4 bg-brand-50 dark:bg-brand-900/60 p-3 rounded-xl border border-brand-200 dark:border-white/10 text-xs">
+                    <p id="free-shipping-text" class="font-medium mb-1">Bepul etkazish uchun yana 2,000,000 so'mlik xarid qiling</p>
+                    <div class="w-full bg-brand-200 dark:bg-white/20 rounded-full h-2">
+                        <div id="free-shipping-progress" class="bg-brand-500 h-2 rounded-full transition-all duration-300" style="width: 40%"></div>
                     </div>
                 </div>
-            `;
 
-            document.getElementById('homeView').classList.add('hidden');
-            document.getElementById('detailView').classList.remove('hidden');
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
+                <!-- Items List -->
+                <div id="cart-items-list" class="space-y-3 overflow-y-auto max-h-[50vh] pr-1">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
 
-        function openReader(mangaId, chapterId) {
-            currentMangaId = mangaId;
-            currentChapterId = chapterId;
-            const manga = mangaList.find(m => m.id === mangaId);
-            const chapter = manga.chapters.find(c => c.id === chapterId);
+            <div class="border-t border-brand-200 dark:border-white/10 pt-4 space-y-4">
+                <!-- Promo Code Input -->
+                <div class="flex gap-2">
+                    <input type="text" id="promo-input" placeholder="Promo-kod (masalan: LUXURY10)" class="w-full px-3 py-2 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-xs focus:outline-none">
+                    <button id="btn-apply-promo" class="px-4 py-2 bg-brand-500 text-white text-xs font-bold rounded-xl hover:bg-brand-600 transition">Qo'llash</button>
+                </div>
+                <div id="promo-applied-info" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium">Promo-kod faollashtirildi (10% chegirma)!</div>
 
-            document.getElementById('readerMangaTitle').innerText = manga.title;
-            document.getElementById('readerChapterTitle').innerText = chapter.title;
+                <div class="flex justify-between items-center text-lg font-bold">
+                    <span>Jami Summa:</span>
+                    <span id="cart-total-price">0 so'm</span>
+                </div>
+                <button onclick="openCheckoutModal()" class="w-full py-3.5 bg-brand-900 dark:bg-brand-500 text-white font-medium rounded-xl hover:bg-brand-500 transition shadow-lg">
+                    Buyurtma Berish
+                </button>
+            </div>
+        </div>
+    </div>
 
-            const select = document.getElementById('chapterSelect');
-            select.innerHTML = '';
-            manga.chapters.forEach(ch => {
-                const opt = document.createElement('option');
-                opt.value = ch.id;
-                opt.innerText = ch.title;
-                if (ch.id === chapterId) opt.selected = true;
-                select.appendChild(opt);
-            });
+    <!-- Quick View Modal -->
+    <div id="quickview-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeQuickView()"></div>
 
-            const currentIndex = manga.chapters.findIndex(c => c.id === chapterId);
-            document.getElementById('prevChapterBtn').disabled = currentIndex === 0;
-            document.getElementById('nextChapterBtn').disabled = currentIndex === manga.chapters.length - 1;
+    <!-- Initial User Auth Blocking Gatekeeper Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-brand-900/90 backdrop-blur-xl z-50 flex items-center justify-center p-4 opacity-100 pointer-events-auto transition-opacity duration-300">
+        <div class="bg-white dark:bg-brand-900 rounded-3xl max-w-md w-full p-6 md:p-8 relative shadow-2xl border border-brand-200 dark:border-white/20 transform scale-100 transition-transform duration-300" id="auth-modal-content">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-brand-500 text-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 shadow-lg">
+                    <i class="fa-solid fa-couch"></i>
+                </div>
+                <h3 id="auth-modal-title" class="text-2xl font-bold">LUXURY HOME ga Xush Kelibsiz!</h3>
+                <p id="auth-modal-desc" class="text-xs opacity-70 mt-2 leading-relaxed">Do'kon katalogi va interyer jihozlaridan to'liq foydalanish uchun shaxsiy ma'lumotlaringizni kiriting.</p>
+            </div>
 
-            const pagesContainer = document.getElementById('readerPages');
-            pagesContainer.innerHTML = '';
-            chapter.pages.forEach((pageUrl, idx) => {
-                const img = document.createElement('img');
-                img.src = pageUrl;
-                img.alt = `Sahifa ${idx + 1}`;
-                img.className = "w-full rounded-xl shadow-md bg-slate-200 dark:bg-slate-800 min-h-[400px] object-contain";
-                img.onerror = function() {
-                    this.src = `https://placehold.co/600x900/1e293b/ffffff?text=Sahifa+${idx + 1}`;
-                };
-                pagesContainer.appendChild(img);
-            });
-
-            document.getElementById('detailView').classList.add('hidden');
-            document.getElementById('readerView').classList.remove('hidden');
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        function changeChapter(chapterId) {
-            openReader(currentMangaId, parseInt(chapterId));
-        }
-
-        function prevChapter() {
-            const manga = mangaList.find(m => m.id === currentMangaId);
-            const currentIndex = manga.chapters.findIndex(c => c.id === currentChapterId);
-            if (currentIndex > 0) {
-                openReader(currentMangaId, manga.chapters[currentIndex - 1].id);
-            }
-        }
-
-        function nextChapter() {
-            const manga = mangaList.find(m => m.id === currentMangaId);
-            const currentIndex = manga.chapters.findIndex(c => c.id === currentChapterId);
-            if (currentIndex < manga.chapters.length - 1) {
-                openReader(currentMangaId, manga.chapters[currentIndex + 1].id);
-            }
-        }
-
-        function closeReader() {
-            document.getElementById('readerView').classList.add('hidden');
-            document.getElementById('detailView').classList.remove('hidden');
-        }
-
-        function toggleFavorite(mangaId) {
-            const index = favorites.indexOf(mangaId);
-            if (index > -1) {
-                favorites.splice(index, 1);
-                showToast("Asar sevimlilardan olib tashlandi", "fa-trash");
-            } else {
-                favorites.push(mangaId);
-                showToast("Asar sevimlilarga qo'shildi", "fa-bookmark");
-            }
-            localStorage.setItem('manga_favorites', JSON.stringify(favorites));
-            updateFavoritesBadge();
-
-            if (currentView === 'home') renderMangaGrid();
-            if (currentView === 'favorites') renderFavorites();
-            if (!document.getElementById('detailView').classList.contains('hidden')) {
-                openMangaDetail(mangaId);
-            }
-        }
-
-        function updateFavoritesBadge() {
-            const badge = document.getElementById('favBadge');
-            if (favorites.length > 0) {
-                badge.innerText = favorites.length;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        function renderFavorites() {
-            const grid = document.getElementById('favoritesGrid');
-            const favCountBadge = document.getElementById('favCountBadge');
-            const favMangas = mangaList.filter(m => favorites.includes(m.id));
-
-            favCountBadge.innerText = `${favMangas.length} ta asar`;
-
-            if (favMangas.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full py-16 text-center space-y-3">
-                        <div class="w-16 h-16 mx-auto rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-400 text-2xl">
-                            <i class="fa-regular fa-bookmark"></i>
-                        </div>
-                        <h3 class="font-bold text-lg">Sevimlilar ro'yxati bo'sh</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">O'zingizga yoqqan asarlarga belgi qo'shing va bu yerda saqlang.</p>
-                        <button onclick="navigateTo('home')" class="px-5 py-2.5 bg-purple-600 text-white text-sm font-semibold rounded-xl shadow-lg shadow-purple-600/30">Asarlarni ko'rish</button>
+            <form id="auth-form" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Ism <span class="text-rose-500">*</span></label>
+                        <input type="text" id="reg-firstname" required placeholder="Jasur" class="w-full px-4 py-3 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-sm focus:outline-none focus:border-brand-500">
                     </div>
-                `;
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Familiya <span class="text-rose-500">*</span></label>
+                        <input type="text" id="reg-lastname" required placeholder="Rahimov" class="w-full px-4 py-3 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Telefon raqam <span class="text-rose-500">*</span></label>
+                    <input type="tel" id="reg-phone" required placeholder="+998 90 123 45 67" class="w-full px-4 py-3 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-sm focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Email pochta <span class="text-rose-500">*</span></label>
+                    <input type="email" id="reg-email" required placeholder="jasur@gmail.com" class="w-full px-4 py-3 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-sm focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div class="pt-3">
+                    <button type="submit" id="btn-save-user" class="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition shadow-lg text-sm flex items-center justify-center gap-2">
+                        <span>Do'konga Kirish</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeCheckoutModal()">
+        <div class="bg-white dark:bg-brand-900 rounded-3xl max-w-lg w-full p-6 md:p-8 relative shadow-2xl border border-white/10" onclick="event.stopPropagation()">
+            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 hover:text-rose-500 p-2 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-2xl font-bold mb-2">Buyurtmani rasmiylashtirish</h3>
+            <p class="text-xs opacity-60 mb-6">Ma'lumotlaringizni kiriting va operatorimiz siz bilan bog'lanadi.</p>
+            
+            <form id="checkout-form" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Ism</label>
+                        <input type="text" id="checkout-firstname" required placeholder="Ali" class="w-full px-4 py-2.5 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">Familiya</label>
+                        <input type="text" id="checkout-lastname" required placeholder="Valiyev" class="w-full px-4 py-2.5 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-sm focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Telefon raqam</label>
+                    <input type="tel" id="checkout-phone" required placeholder="+998 90 123 45 67" class="w-full px-4 py-2.5 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-sm focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Email pochta</label>
+                    <input type="email" id="checkout-email" required placeholder="ali@gmail.com" class="w-full px-4 py-2.5 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-sm focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">Yetkazib berish manzili</label>
+                    <input type="text" required placeholder="Toshkent sh., Chilonzor t." class="w-full px-4 py-2.5 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-sm focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">To'lov turi</label>
+                    <select class="w-full px-4 py-2.5 rounded-xl border border-brand-200 dark:border-white/20 dark:bg-brand-900 text-sm focus:outline-none focus:border-brand-500">
+                        <option>Naqd pul (Qabul qilganda)</option>
+                        <option>Click / Payme</option>
+                        <option>Bank kartasi orqali</option>
+                    </select>
+                </div>
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition shadow-md">
+                        Buyurtmani tasdiqlash
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Data and Functionality -->
+    <script>
+        // Data Store: 30+ Products Across All Categories
+        const products = [
+            // Mehmonxona (Living Room)
+            { id: 1, name: "Scandi Soft Divan", category: "mehmonxona", price: 4500000, rating: 4.9, reviews: 24, image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80", description: "Skandinaviya uslubidagi minimalist va nihoyatda qulay 3 kishilik yumshoq divan." },
+            { id: 2, name: "Loft Velur Kreslo", category: "mehmonxona", price: 1650000, rating: 4.8, reviews: 15, image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80", description: "Yumshoq baxmal qoplamali va temir karkasli zamonaviy loft kreslo." },
+            { id: 3, name: "Elegance Jurnal Stoli", category: "mehmonxona", price: 950000, rating: 4.5, reviews: 29, image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=600&q=80", description: "Marmar ustki qismli va oltin rangli metall oyoqli nafis jurnal stoli." },
+            { id: 4, name: "Minimalist Loft Javon", category: "mehmonxona", price: 2100000, rating: 4.6, reviews: 15, image: "https://images.unsplash.com/photo-1594620302200-9a762244a156?auto=format&fit=crop&w=600&q=80", description: "Kitoblar va dekoratsiyalar uchun mo'ljallangan mustahkam loft uslubidagi javon." },
+            { id: 5, name: "Modul TV Konsol", category: "mehmonxona", price: 2800000, rating: 4.7, reviews: 19, image: "https://images.unsplash.com/photo-1607400201889-565b1ee75f8e?auto=format&fit=crop&w=600&q=80", description: "Zamonaviy TV va audio apparatura uchun mo'ljallangan minimalist yog'och konsol." },
+            { id: 6, name: "Chesterfield Teri Divan", category: "mehmonxona", price: 8900000, rating: 5.0, reviews: 11, image: "https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?auto=format&fit=crop&w=600&q=80", description: "Klassik premium charm qoplamali shohona 3 kishilik divan." },
+
+            // Yotoqxona (Bedroom)
+            { id: 7, name: "Royal King Krovat", category: "yotoqxona", price: 6800000, rating: 4.8, reviews: 18, image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=600&q=80", description: "Ortopedik matrasli, yumshoq bosh qismli zamonaviy va shinam King size krovat." },
+            { id: 8, name: "Yotoqxona Tumba To'plami", category: "yotoqxona", price: 1200000, rating: 4.8, reviews: 12, image: "https://images.unsplash.com/photo-1532323544230-7191fd51bc1b?auto=format&fit=crop&w=600&q=80", description: "Yotoq yoniga qo'yiladigan 2 dona ixcham va shinam tortmali tumbachalar." },
+            { id: 9, name: "Nafis Ko'zguli Komod", category: "yotoqxona", price: 2700000, rating: 4.6, reviews: 8, image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=600&q=80", description: "Kiyim kechaklar va pardoz anjomlari uchun ko'zguli keng komod." },
+            { id: 10, name: "Minimalist Garderob Shkafi", category: "yotoqxona", price: 5400000, rating: 4.9, reviews: 21, image: "https://images.unsplash.com/photo-1558882224-dda166733046?auto=format&fit=crop&w=600&q=80", description: "Keng sig'imli, surma eshikli va yorug'lik chiroqlari bilan jihozlangan garderob." },
+            { id: 11, name: "Soft Silk Yotoq Boshligi", category: "yotoqxona", price: 1400000, rating: 4.5, reviews: 16, image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=600&q=80", description: "Yumshoq ipak matoli krovat orqa suyanchig'i." },
+
+            // Oshxona (Kitchen & Dining)
+            { id: 12, name: "Modern Eko Stol & Stullar", category: "oshxona", price: 3200000, rating: 4.7, reviews: 31, image: "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=600&q=80", description: "Tabiiy emon yog'ochidan tayyorlangan 4 kishilik ovqatlanish stoli to'plami." },
+            { id: 13, name: "Bar Stuli Loft Gold", category: "oshxona", price: 750000, rating: 4.6, reviews: 26, image: "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=600&q=80", description: "Bar stoli uchun mos keluvchi baland, metall oyoqli yumshoq stul." },
+            { id: 14, name: "Marmar Ovqatlanish Stoli", category: "oshxona", price: 5900000, rating: 4.9, reviews: 14, image: "https://images.unsplash.com/photo-1577140917170-285929fb55b7?auto=format&fit=crop&w=600&q=80", description: "6 kishilik premium marmar stoli va yumshoq baxmal stullari." },
+            { id: 15, name: "Kompakt Oshxona Raf Tizimi", category: "oshxona", price: 890000, rating: 4.4, reviews: 19, image: "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=80", description: "Idish-tovoq va ziravorlar uchun ixcham metall va yog'och raflar." },
+
+            // Yoritgichlar (Lighting)
+            { id: 16, name: "Nordic Pendant Lyustra", category: "yoritgichlar", price: 850000, rating: 4.9, reviews: 37, image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80", description: "Zamonaviy shisha va oltinrang metall uyg'unligidagi marjon shaklidagi stilni lyustra." },
+            { id: 17, name: "Golden Arc Torsher", category: "yoritgichlar", price: 1100000, rating: 4.8, reviews: 22, image: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=600&q=80", description: "Mutolaa va mehmonxona uchun burchakda turuvchi nafis arkasimon chiroq." },
+            { id: 18, name: "Minimalist Stol Chirog'i", category: "yoritgichlar", price: 420000, rating: 4.7, reviews: 30, image: "https://images.unsplash.com/photo-1534349762230-e0cadf78f5da?auto=format&fit=crop&w=600&q=80", description: "Sensorli boshqaruvga ega LED ish va mutolaa chirog'i." },
+            { id: 19, name: "Klassik Oltin Shambala Lyustra", category: "yoritgichlar", price: 3400000, rating: 5.0, reviews: 17, image: "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=600&q=80", description: "Katta zallar uchun 12 shohli kristalli koshona lyustra." },
+            { id: 20, name: "Neon Ambient Devor Chirog'i", category: "yoritgichlar", price: 620000, rating: 4.6, reviews: 25, image: "https://images.unsplash.com/photo-1563298723-dcfebaa392e3?auto=format&fit=crop&w=600&q=80", description: "Yumshoq yoritish beruvchi zamonaviy geometrik devor lampasi." },
+
+            // Gilamlar (Rugs & Carpets)
+            { id: 21, name: "Kashmiri Premium Gilam", category: "gilamlar", price: 2400000, rating: 5.0, reviews: 14, image: "https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=600&q=80", description: "Yumshoq teksturali, zaminni issiq ushlab turuvchi 200x300 o'lchamli nafis gilam." },
+            { id: 22, name: "Soft Plush Bolalar Gilami", category: "gilamlar", price: 1100000, rating: 4.8, reviews: 18, image: "https://images.unsplash.com/photo-1575414003591-ece8d0416c7a?auto=format&fit=crop&w=600&q=80", description: "Antiallergen va g'oyat yumshoq bolalar xonasi gilami." },
+            { id: 23, name: "Geometrik Modern Gilam", category: "gilamlar", price: 1850000, rating: 4.7, reviews: 22, image: "https://images.unsplash.com/photo-1594040226829-7f251ab46d80?auto=format&fit=crop&w=600&q=80", description: "Skandinav uslubidagi chiroqli geometrik naqshli gilam." },
+            { id: 24, name: "Tabiiy Ipak Sharq Gilami", category: "gilamlar", price: 7200000, rating: 4.9, reviews: 9, image: "https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=600&q=80", description: "Qo'lda to'qilgan 100% tabiiy ipak tolasidan tayyorlangan nodir gilam." },
+
+            // Tekstil & Dekor (Textiles & Decor)
+            { id: 25, name: "Minimalist Keramik Vaza", category: "dekor", price: 350000, rating: 4.6, reviews: 19, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80", description: "Interyer dizaynini to'ldiruvchi qo'lda tayyorlangan san'at namunasi bo'lgan keramik vaza." },
+            { id: 26, name: "Velvet Dekorativ Yostiqlar", category: "dekor", price: 280000, rating: 4.7, reviews: 55, image: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=600&q=80", description: "Divan va kreslolar uchun yumshoq, baxmal matoli 2 talik dekorativ yostiqlar." },
+            { id: 27, name: "Oltin Hoshiyali Devor Ko'zgusi", category: "dekor", price: 1250000, rating: 4.9, reviews: 28, image: "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=80", description: "Katta dumaloq shakldagi zamonaviy zallarga mos kelfchi ko'zgu." },
+            { id: 28, name: "Abstrakt Devor Kartinasi", category: "dekor", price: 680000, rating: 4.8, reviews: 13, image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80", description: "Zamonaviy san'at asari ramkadagi abstrakt rasm." },
+
+            // Ishxona (Office)
+            { id: 29, name: "Ergonomik Office Kreslosi", category: "ishxona", price: 1800000, rating: 4.9, reviews: 42, image: "https://images.unsplash.com/photo-1580481072645-022f9a6d85d5?auto=format&fit=crop&w=600&q=80", description: "Bel sohasini qo'llab-quvvatlovchi, balandligi va burchagi sozlanuvchi zamonaviy kreslo." },
+            { id: 30, name: "Executive Yog'och Ish Stoli", category: "ishxona", price: 4200000, rating: 4.8, reviews: 16, image: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80", description: "Raxbarlar uchun mo'ljallangan keng va nufuzli yog'och stol." },
+            { id: 31, name: "Kompakt Kompyuter Stoli", category: "ishxona", price: 1150000, rating: 4.5, reviews: 33, image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=600&q=80", description: "Kichik xonalar va noutbukda ishlash uchun minimalist stol." },
+            { id: 32, name: "Organayzerli Hujjat Shkafi", category: "ishxona", price: 1950000, rating: 4.6, reviews: 10, image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=600&q=80", description: "Offis hujjatlari va qog'ozlarini tartibli saqlash uchun metall shkaf." }
+        ];
+
+        // State Management
+        let cart = [];
+        let wishlist = [];
+        let currentFilter = 'all';
+        let maxPrice = 25000000;
+        let searchQuery = '';
+        let appliedDiscount = 0;
+        let itemsToShow = 8; // Pagination limit
+        let currentUser = null; // Stored user profile
+
+        // User Auth & Modal Functions
+        function checkUserProfile() {
+            const savedUser = localStorage.getItem('luxury_home_user');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    updateUserHeaderUI();
+                    closeAuthModal();
+                } catch(e) {
+                    openAuthModal();
+                }
+            } else {
+                openAuthModal();
+            }
+        }
+
+        function openAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            const content = document.getElementById('auth-modal-content');
+            
+            document.body.classList.add('auth-locked');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            const content = document.getElementById('auth-modal-content');
+
+            document.body.classList.remove('auth-locked');
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+        }
+
+        document.getElementById('auth-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const firstName = document.getElementById('reg-firstname').value.trim();
+            const lastName = document.getElementById('reg-lastname').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+
+            if (!firstName || !lastName || !phone || !email) {
+                showToast("Iltimos, barcha maydonlarni to'liq to'ldiring!");
                 return;
             }
 
-            grid.innerHTML = '';
-            favMangas.forEach(manga => {
-                const card = document.createElement('div');
-                card.className = "group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer";
-                card.onclick = () => openMangaDetail(manga.id);
+            currentUser = { firstName, lastName, phone, email };
+            localStorage.setItem('luxury_home_user', JSON.stringify(currentUser));
+            
+            updateUserHeaderUI();
+            closeAuthModal();
+            showToast(`Xush kelibsiz, ${firstName}! Sayt faollashtirildi.`);
+        });
 
+        function updateUserHeaderUI() {
+            const nameSpan = document.getElementById('user-display-name');
+            const dropdownName = document.getElementById('user-dropdown-name');
+            const dropdownEmail = document.getElementById('user-dropdown-email');
+            const dropdownPhone = document.getElementById('user-dropdown-phone');
+
+            if (currentUser) {
+                nameSpan.textContent = `${currentUser.firstName}`;
+                dropdownName.textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                dropdownEmail.textContent = currentUser.email;
+                dropdownPhone.textContent = currentUser.phone;
+            } else {
+                nameSpan.textContent = "Kirish";
+            }
+        }
+
+        function handleUserAuthClick() {
+            if (currentUser) {
+                const dropdown = document.getElementById('user-dropdown');
+                dropdown.classList.toggle('hidden');
+            } else {
+                openAuthModal();
+            }
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('luxury_home_user');
+            currentUser = null;
+            document.getElementById('user-dropdown').classList.add('hidden');
+            document.getElementById('auth-form').reset();
+            updateUserHeaderUI();
+            showToast("Akkountdan chiqdingiz");
+            openAuthModal();
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const profileContainer = document.getElementById('user-profile-container');
+            if (profileContainer && !profileContainer.contains(e.target)) {
+                const dropdown = document.getElementById('user-dropdown');
+                if (dropdown) dropdown.classList.add('hidden');
+            }
+        });
+
+        // DOM Elements
+        const grid = document.getElementById('product-grid');
+        const totalCountBadge = document.getElementById('total-count-badge');
+        const priceRange = document.getElementById('price-range');
+        const priceRangeVal = document.getElementById('price-range-val');
+        const sortSelect = document.getElementById('sort-select');
+        const btnLoadMore = document.getElementById('btn-load-more');
+        const loadMoreContainer = document.getElementById('load-more-container');
+        const heroSearchInput = document.getElementById('hero-search-input');
+
+        // Dark/Light Theme Toggle
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                showToast("Tungi rejim yoqildi");
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                showToast("Kunduzgi rejim yoqildi");
+            }
+        });
+
+        // Price Formatting Helper
+        function formatPrice(price) {
+            return new Intl.NumberFormat('uz-UZ').format(price) + " so'm";
+        }
+
+        // Render Filtered Products with Pagination
+        function renderProducts() {
+            grid.innerHTML = '';
+            
+            let filtered = products.filter(p => {
+                const matchesCategory = currentFilter === 'all' || p.category === currentFilter;
+                const matchesPrice = p.price <= maxPrice;
+                const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesPrice && matchesSearch;
+            });
+
+            totalCountBadge.textContent = filtered.length;
+
+            // Sorting logic
+            const sortVal = sortSelect.value;
+            if (sortVal === 'price-low') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sortVal === 'price-high') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (sortVal === 'rating') {
+                filtered.sort((a, b) => b.rating - a.rating);
+            }
+
+            const visibleProducts = filtered.slice(0, itemsToShow);
+
+            if (filtered.length === 0) {
+                document.getElementById('no-products').classList.remove('hidden');
+                loadMoreContainer.classList.add('hidden');
+            } else {
+                document.getElementById('no-products').classList.add('hidden');
+                if (filtered.length > itemsToShow) {
+                    loadMoreContainer.classList.remove('hidden');
+                } else {
+                    loadMoreContainer.classList.add('hidden');
+                }
+            }
+
+            visibleProducts.forEach(product => {
+                const isWishlisted = wishlist.includes(product.id);
+                const card = document.createElement('div');
+                card.className = "bg-brand-50 dark:bg-brand-900/60 rounded-2xl overflow-hidden border border-brand-200 dark:border-white/10 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group";
                 card.innerHTML = `
-                    <div class="relative aspect-[3/4] overflow-hidden bg-slate-200 dark:bg-slate-800">
-                        <img src="${manga.cover}" alt="${manga.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/400x600/7c3aed/ffffff?text=Manga'">
-                        <div class="absolute top-2 right-2 z-10">
-                            <button onclick="event.stopPropagation(); toggleFavorite(${manga.id})" class="w-9 h-9 rounded-xl bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:bg-purple-600 transition-colors">
-                                <i class="fa-solid text-purple-400 fa-bookmark"></i>
-                            </button>
-                        </div>
-                        <div class="absolute bottom-2 left-2 flex items-center space-x-1.5 px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-lg text-white text-xs font-semibold">
-                            <i class="fa-solid fa-star text-amber-400"></i>
-                            <span>${manga.rating}</span>
-                        </div>
+                    <div class="relative overflow-hidden aspect-[4/3]">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <button onclick="toggleWishlist(${product.id})" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/80 dark:bg-brand-900/80 backdrop-blur-md flex items-center justify-center text-brand-900 dark:text-white hover:text-rose-500 transition shadow">
+                            <i class="${isWishlisted ? 'fa-solid text-rose-500' : 'fa-regular'} fa-heart"></i>
+                        </button>
+                        <button onclick="openQuickView(${product.id})" class="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-2 bg-white/90 dark:bg-brand-900/90 backdrop-blur-md text-brand-900 dark:text-white text-xs font-semibold rounded-full shadow opacity-0 group-hover:opacity-100 transition duration-300">
+                            Tezkor Ko'rish
+                        </button>
                     </div>
-                    <div class="p-4 flex flex-col flex-1 justify-between space-y-2">
+                    <div class="p-5 flex flex-col flex-grow justify-between">
                         <div>
-                            <span class="text-[10px] uppercase font-bold text-purple-600 dark:text-purple-400 tracking-wider">${manga.genres[0]}</span>
-                            <h3 class="font-bold text-sm line-clamp-1 group-hover:text-purple-600 transition-colors">${manga.title}</h3>
+                            <div class="flex items-center justify-between text-xs opacity-60 mb-2">
+                                <span class="uppercase tracking-wider font-semibold">${product.category}</span>
+                                <span class="flex items-center gap-1 text-amber-500 font-bold">
+                                    <i class="fa-solid fa-star text-xs"></i> ${product.rating} (${product.reviews})
+                                </span>
+                            </div>
+                            <h3 class="font-bold text-base leading-snug mb-2 group-hover:text-brand-500 transition">${product.name}</h3>
                         </div>
-                        <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                            <span><i class="fa-solid fa-book mr-1"></i> ${manga.chapters.length} qism</span>
-                            <span>${manga.status}</span>
+                        <div class="mt-4 pt-4 border-t border-brand-200 dark:border-white/10 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] opacity-50 block uppercase">Narxi</span>
+                                <span class="text-sm font-bold text-brand-500">${formatPrice(product.price)}</span>
+                            </div>
+                            <button onclick="addToCart(${product.id})" class="w-9 h-9 rounded-xl bg-brand-900 dark:bg-brand-500 text-white flex items-center justify-center hover:bg-brand-500 dark:hover:bg-brand-600 transition shadow-sm">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -668,37 +1025,324 @@
             });
         }
 
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            const icon = document.getElementById('themeIcon');
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                icon.className = 'fa-solid fa-sun';
-                localStorage.setItem('theme', 'light');
+        // Pagination "Load More"
+        btnLoadMore.addEventListener('click', () => {
+            itemsToShow += 8;
+            renderProducts();
+        });
+
+        // Filter Tabs Logic
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('bg-brand-900', 'dark:bg-brand-500', 'text-white', 'active');
+                    b.classList.add('bg-brand-100', 'dark:bg-white/10', 'text-brand-900', 'dark:text-white');
+                });
+                
+                e.target.classList.remove('bg-brand-100', 'dark:bg-white/10', 'text-brand-900', 'dark:text-white');
+                e.target.classList.add('bg-brand-900', 'dark:bg-brand-500', 'text-white', 'active');
+                
+                currentFilter = e.target.getAttribute('data-filter');
+                itemsToShow = 8;
+                renderProducts();
+            });
+        });
+
+        // Category Cards Quick Filter
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const cat = card.getAttribute('data-category');
+                const targetBtn = document.querySelector(`.filter-btn[data-filter="${cat}"]`);
+                if (targetBtn) {
+                    targetBtn.click();
+                    document.getElementById('katalog').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Price Range Listener
+        priceRange.addEventListener('input', (e) => {
+            maxPrice = parseInt(e.target.value);
+            priceRangeVal.textContent = formatPrice(maxPrice);
+            renderProducts();
+        });
+
+        // Sort Selector Listener
+        sortSelect.addEventListener('change', renderProducts);
+
+        // Search Input Listener
+        heroSearchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderProducts();
+        });
+
+        // Add to Cart
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const existing = cart.find(item => item.id === id);
+
+            if (existing) {
+                existing.quantity += 1;
             } else {
-                html.classList.add('dark');
-                icon.className = 'fa-solid fa-moon';
-                localStorage.setItem('theme', 'dark');
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartUI();
+            showToast(`${product.name} savatchaga qo'shildi!`);
+        }
+
+        // Quantity update inside cart
+        function updateQuantity(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+            }
+            updateCartUI();
+        }
+
+        // Remove item from cart
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCartUI();
+            showToast("Mahsulot savatdan o'chirildi.");
+        }
+
+        // Wishlist Toggle
+        function toggleWishlist(id) {
+            const index = wishlist.indexOf(id);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                showToast("Saralanganlardan olib tashlandi");
+            } else {
+                wishlist.push(id);
+                showToast("Saralanganlarga qo'shildi ❤️");
+            }
+            
+            const badge = document.getElementById('wishlist-badge');
+            badge.textContent = wishlist.length;
+            badge.style.opacity = wishlist.length > 0 ? '1' : '0';
+            
+            renderProducts();
+        }
+
+        // Promo Code Logic
+        document.getElementById('btn-apply-promo').addEventListener('click', () => {
+            const promoVal = document.getElementById('promo-input').value.trim().toUpperCase();
+            if (promoVal === 'LUXURY10' || promoVal === 'TOSHKENT2026') {
+                appliedDiscount = 0.10; // 10% discount
+                document.getElementById('promo-applied-info').classList.remove('hidden');
+                showToast("10% chegirmali promo-kod qo'llanildi!");
+                updateCartUI();
+            } else {
+                showToast("Noto'g'ri promo-kod kiritildi!");
+            }
+        });
+
+        // Cart UI Update
+        function updateCartUI() {
+            const cartItemsList = document.getElementById('cart-items-list');
+            const cartBadge = document.getElementById('cart-badge');
+            const cartTotalPrice = document.getElementById('cart-total-price');
+            const freeShippingText = document.getElementById('free-shipping-text');
+            const freeShippingProgress = document.getElementById('free-shipping-progress');
+
+            cartItemsList.innerHTML = '';
+            let total = 0;
+            let totalCount = 0;
+
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = `
+                    <div class="text-center py-12 opacity-50">
+                        <i class="fa-solid fa-basket-shopping text-4xl mb-3"></i>
+                        <p class="text-sm">Savatchangiz hozircha bo'sh</p>
+                    </div>
+                `;
+            } else {
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    totalCount += item.quantity;
+
+                    const cartItem = document.createElement('div');
+                    cartItem.className = "flex items-center gap-4 bg-brand-50 dark:bg-brand-900/60 p-3 rounded-2xl border border-brand-200 dark:border-white/10";
+                    cartItem.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover">
+                        <div class="flex-grow">
+                            <h4 class="font-bold text-sm line-clamp-1">${item.name}</h4>
+                            <p class="text-xs font-semibold text-brand-500">${formatPrice(item.price)}</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded-md bg-white dark:bg-brand-900 border border-brand-200 dark:border-white/20 flex items-center justify-center text-xs font-bold">-</button>
+                                <span class="text-xs font-bold">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 rounded-md bg-white dark:bg-brand-900 border border-brand-200 dark:border-white/20 flex items-center justify-center text-xs font-bold">+</button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="opacity-40 hover:text-rose-500 p-2 text-sm">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    `;
+                    cartItemsList.appendChild(cartItem);
+                });
+            }
+
+            if (appliedDiscount > 0) {
+                total = total * (1 - appliedDiscount);
+            }
+
+            cartBadge.textContent = totalCount;
+            cartTotalPrice.textContent = formatPrice(total);
+
+            const freeShippingTarget = 10000000;
+            if (total >= freeShippingTarget) {
+                freeShippingText.textContent = "Siz bepul etkazib berish huquqini qo'lga kiritdingiz!";
+                freeShippingProgress.style.width = "100%";
+            } else {
+                const diff = freeShippingTarget - total;
+                freeShippingText.textContent = `Bepul etkazish uchun yana ${formatPrice(diff)}lik xarid qiling`;
+                freeShippingProgress.style.width = `${Math.min(100, (total / freeShippingTarget) * 100)}%`;
             }
         }
 
-        function showToast(message, iconClass = "fa-circle-check") {
-            const toast = document.getElementById('toast');
-            const msg = document.getElementById('toastMessage');
-            const icon = document.getElementById('toastIcon');
+        // Cart Drawer Controls
+        function toggleCartDrawer(open) {
+            const overlay = document.getElementById('cart-drawer-overlay');
+            const drawer = document.getElementById('cart-drawer');
+            if (open) {
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                drawer.classList.remove('translate-x-full');
+            } else {
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                drawer.classList.add('translate-x-full');
+            }
+        }
 
-            msg.innerText = message;
-            icon.className = `fa-solid ${iconClass} text-purple-400`;
+        // Quick View Modal
+        function openQuickView(productId) {
+            const product = products.find(p => p.id === productId);
+            const modalBody = document.getElementById('quickview-body');
+            
+            modalBody.innerHTML = `
+                <div class="rounded-2xl overflow-hidden aspect-[4/3] bg-brand-100 dark:bg-brand-900/80">
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                </div>
+                <div class="flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-semibold text-brand-500 uppercase tracking-widest">${product.category}</span>
+                        <h3 class="text-2xl font-bold mt-1 mb-2">${product.name}</h3>
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-amber-500 text-sm"><i class="fa-solid fa-star"></i> ${product.rating}</span>
+                            <span class="text-xs opacity-50">(${product.reviews} mijoz sharhlari)</span>
+                        </div>
+                        <p class="text-sm opacity-70 mb-6 leading-relaxed">${product.description}</p>
+                        
+                        <div class="text-2xl font-bold text-brand-500 mb-6">
+                            ${formatPrice(product.price)}
+                        </div>
+                    </div>
+                    <button onclick="addToCart(${product.id}); closeQuickView();" class="w-full py-3.5 bg-brand-900 dark:bg-brand-500 text-white font-semibold rounded-xl hover:bg-brand-500 transition shadow-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cart-plus"></i> Savatga Qo'shish
+                    </button>
+                </div>
+            `;
 
-            toast.classList.remove('translate-y-20', 'opacity-0');
+            const modal = document.getElementById('quickview-modal');
+            const content = document.getElementById('quickview-content');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-95');
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById('quickview-modal');
+            const content = document.getElementById('quickview-content');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.add('scale-95');
+        }
+
+        // Checkout Modal
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                showToast("Savat bo'sh! Oldin mahsulot tanlang.");
+                return;
+            }
+            toggleCartDrawer(false);
+
+            // Auto-fill checkout fields if user exists
+            if (currentUser) {
+                document.getElementById('checkout-firstname').value = currentUser.firstName || '';
+                document.getElementById('checkout-lastname').value = currentUser.lastName || '';
+                document.getElementById('checkout-phone').value = currentUser.phone || '';
+                document.getElementById('checkout-email').value = currentUser.email || '';
+            }
+
+            const modal = document.getElementById('checkout-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeCheckoutModal() {
+            const modal = document.getElementById('checkout-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        document.getElementById('checkout-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            closeCheckoutModal();
+            cart = [];
+            appliedDiscount = 0;
+            document.getElementById('promo-applied-info').classList.add('hidden');
+            updateCartUI();
+            showToast("Rahmat! Buyurtmangiz qabul qilindi. Operator tez orada bog'lanadi.");
+        });
+
+        // Contact Form
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            e.target.reset();
+            showToast("Xabaringiz muvaffaqiyatli yuborildi!");
+        });
+
+        // Toast Notification System
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = "bg-brand-900 dark:bg-brand-500 text-white px-5 py-3 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-3 toast-enter pointer-events-auto border border-white/20";
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-brand-500 dark:text-white"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
             setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.add('toast-enter-active');
+            }, 10);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(100%)';
+                setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
 
-        function scrollToCatalog() {
-            document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
         }
+
+        // Wishlist Notification Click
+        function toggleWishlistModal() {
+            if (wishlist.length === 0) {
+                showToast("Saralangan mahsulotlar hozircha yo'q");
+            } else {
+                showToast(`Sizda ${wishlist.length} ta saralangan mahsulot bor.`);
+            }
+        }
+
+      
+        window.onload = function() {
+            checkUserProfile();
+            renderProducts();
+            updateCartUI();
+        };
     </script>
 </body>
 </html>
